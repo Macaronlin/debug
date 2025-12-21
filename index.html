@@ -13,26 +13,123 @@
 
         body {
             overflow: hidden;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
-            font-family: 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ffb3d9 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Comic Sans MS', 'Microsoft YaHei', 'Arial', sans-serif;
             position: relative;
             width: 100vw;
             height: 100vh;
         }
 
-        /* 全屏飘落的夸赞文字 */
-        .floating-text {
-            position: absolute;
-            font-size: 24px;
-            font-weight: bold;
-            color: rgba(255, 255, 255, 0.9);
-            text-shadow: 2px 2px 8px rgba(255, 51, 102, 0.5);
-            pointer-events: none;
-            animation: float 15s infinite linear;
-            white-space: nowrap;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        @keyframes float {
+        /* 中间跳舞的 loppy 容器 - 确保在最上层 */
+        .loppy-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000; /* 最高层级，确保不被文字覆盖 */
+            width: 400px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .loppy-gif {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 60px rgba(255, 51, 102, 0.5));
+            animation: loppyDance 2s ease-in-out infinite;
+        }
+
+        @keyframes loppyDance {
+            0%, 100% {
+                transform: scale(1) rotate(-3deg);
+            }
+            25% {
+                transform: scale(1.05) rotate(3deg);
+            }
+            50% {
+                transform: scale(1) rotate(-3deg);
+            }
+            75% {
+                transform: scale(1.05) rotate(3deg);
+            }
+        }
+
+        /* 备用 CSS 动画 loppy */
+        .loppy {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #ffb3d9 0%, #ff99cc 100%);
+            border-radius: 50%;
+            position: relative;
+            animation: dance 1s ease-in-out infinite;
+            box-shadow: 0 20px 60px rgba(255, 51, 102, 0.4);
+        }
+
+        .loppy::before {
+            content: '🐰';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 150px;
+            animation: bounce 0.6s ease-in-out infinite;
+        }
+
+        @keyframes dance {
+            0%, 100% {
+                transform: rotate(-5deg) scale(1);
+            }
+            25% {
+                transform: rotate(5deg) scale(1.05);
+            }
+            50% {
+                transform: rotate(-5deg) scale(1);
+            }
+            75% {
+                transform: rotate(5deg) scale(1.05);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        /* 多种文字显示形式 */
+        /* 形式1: 飘落文字 */
+        .floating-text {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 3px 3px 10px rgba(255, 51, 102, 0.6),
+                         0 0 20px rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 1; /* 确保在 loppy 下方 */
+        }
+
+        .float-up {
+            animation: floatUp 12s linear infinite;
+        }
+
+        @keyframes floatUp {
             0% {
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
@@ -49,117 +146,142 @@
             }
         }
 
-        /* 中间跳舞的 loppy 容器 */
-        .loppy-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-            width: 300px;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* 形式2: 旋转文字 */
+        .rotating-text {
+            animation: rotateText 8s linear infinite;
         }
 
-        .loppy {
-            width: 250px;
-            height: 250px;
-            background: linear-gradient(135deg, #ffb3d9 0%, #ff99cc 100%);
-            border-radius: 50%;
-            position: relative;
-            animation: dance 1s ease-in-out infinite;
-            box-shadow: 0 20px 60px rgba(255, 51, 102, 0.4);
-        }
-
-        /* 可爱的 loppy 脸部 */
-        .loppy::before {
-            content: '🐰';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 120px;
-            animation: bounce 0.6s ease-in-out infinite;
-        }
-
-        /* 耳朵装饰 */
-        .loppy::after {
-            content: '';
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 80px;
-            background: linear-gradient(135deg, #ffb3d9 0%, #ff99cc 100%);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            box-shadow: -40px 0 0 -20px rgba(255, 179, 217, 0.8),
-                        40px 0 0 -20px rgba(255, 179, 217, 0.8);
-        }
-
-        @keyframes dance {
-            0%, 100% {
-                transform: translate(-50%, -50%) rotate(-5deg) scale(1);
+        @keyframes rotateText {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
             }
-            25% {
-                transform: translate(-50%, -50%) rotate(5deg) scale(1.05);
+            20% {
+                opacity: 1;
+                transform: translateY(50vh) rotate(180deg) scale(1);
+            }
+            80% {
+                opacity: 1;
+                transform: translateY(-50vh) rotate(540deg) scale(1);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(720deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* 形式3: 弹跳文字 */
+        .bouncing-text {
+            animation: bounceText 6s ease-in-out infinite;
+        }
+
+        @keyframes bounceText {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0.8);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            25%, 75% {
+                transform: translateY(30vh) translateX(50px) scale(1.2);
             }
             50% {
-                transform: translate(-50%, -50%) rotate(-5deg) scale(1);
+                transform: translateY(20vh) translateX(-50px) scale(1.2);
             }
-            75% {
-                transform: translate(-50%, -50%) rotate(5deg) scale(1.05);
+            85% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(0) scale(0.8);
+                opacity: 0;
             }
         }
 
-        @keyframes bounce {
-            0%, 100% {
-                transform: translate(-50%, -50%) scale(1);
+        /* 形式4: 波浪文字 */
+        .wave-text {
+            animation: waveText 10s ease-in-out infinite;
+        }
+
+        @keyframes waveText {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
             }
             50% {
-                transform: translate(-50%, -50%) scale(1.1);
+                transform: translateY(30vh) translateX(100px) rotate(10deg);
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(-100px) rotate(-10deg);
+                opacity: 0;
             }
         }
 
-        /* 如果使用 GIF 图片 */
-        .loppy-gif {
-            width: 300px;
-            height: 300px;
-            object-fit: contain;
-            animation: dance 1s ease-in-out infinite;
-            filter: drop-shadow(0 20px 40px rgba(255, 51, 102, 0.4));
+        /* 形式5: 闪烁文字 */
+        .twinkling-text {
+            animation: twinkleText 7s linear infinite;
         }
 
-        /* 背景装饰星星 */
+        @keyframes twinkleText {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(50vh) scale(1.3);
+            }
+            30% {
+                transform: translateY(50vh) scale(1);
+            }
+            70% {
+                transform: translateY(50vh) scale(1);
+            }
+            80% {
+                transform: translateY(50vh) scale(1.3);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* 背景装饰 */
         .star {
             position: absolute;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 20px;
-            animation: twinkle 2s ease-in-out infinite;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 24px;
+            animation: twinkle 3s ease-in-out infinite;
+            z-index: 1;
         }
 
         @keyframes twinkle {
             0%, 100% {
                 opacity: 0.3;
-                transform: scale(1);
+                transform: scale(1) rotate(0deg);
             }
             50% {
                 opacity: 1;
-                transform: scale(1.2);
+                transform: scale(1.3) rotate(180deg);
             }
         }
 
-        /* 心形装饰 */
         .heart {
             position: absolute;
-            color: rgba(255, 51, 102, 0.4);
-            font-size: 30px;
-            animation: float-heart 8s ease-in-out infinite;
+            color: rgba(255, 51, 102, 0.5);
+            font-size: 35px;
+            animation: floatHeart 10s ease-in-out infinite;
+            z-index: 1;
         }
 
-        @keyframes float-heart {
+        @keyframes floatHeart {
             0% {
                 transform: translateY(0) rotate(0deg);
                 opacity: 0;
@@ -175,17 +297,62 @@
                 opacity: 0;
             }
         }
+
+        /* 音乐控制按钮 */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #ff99cc;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .music-control.muted {
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
+    <!-- 音乐控制按钮 -->
+    <div class="music-control" id="musicControl" title="点击播放/暂停音乐">🎵</div>
+
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop preload="auto">
+        <!-- 优先使用本地音乐文件 -->
+        <source src="./music.mp3" type="audio/mpeg">
+        <source src="./music.ogg" type="audio/ogg">
+        <!-- 备用在线音乐（可能需要用户交互才能播放） -->
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- 中间跳舞的 loppy -->
     <div class="loppy-container">
-        <!-- 如果 loppy.gif 存在，使用图片；否则使用 CSS 动画的兔子 -->
-        <img class="loppy-gif" src="./loppy.gif" alt="Loppy跳舞" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <!-- 优先使用本地 GIF 文件，如果没有则尝试在线链接 -->
+        <img class="loppy-gif" 
+             src="./loppy.gif" 
+             alt="双马尾Loppy跳舞"
+             onerror="tryOnlineGif(this);">
+        <!-- 备用：如果所有 GIF 都加载失败，显示 CSS 动画 -->
         <div class="loppy" style="display: none;"></div>
     </div>
 
-    <!-- 全屏飘落的夸赞文字 -->
+    <!-- 全屏飘落的夸赞文字容器 -->
     <div id="text-container"></div>
 
     <!-- 装饰星星 -->
@@ -195,47 +362,76 @@
     <div id="hearts-container"></div>
 
     <script>
-        // 夸赞寻沫的话
+        // 在线 GIF 链接列表（可以替换为实际的双马尾 loppy 跳舞 GIF）
+        const onlineGifUrls = [
+            'https://media.tenor.com/your-gif-id/loppy-dancing.gif',
+            'https://i.gifer.com/your-gif.gif',
+            'https://media.giphy.com/media/your-gif-id/giphy.gif'
+        ];
+        
+        let gifTryCount = 0;
+        
+        // 全局函数：尝试加载在线 GIF
+        window.tryOnlineGif = function(imgElement) {
+            if (gifTryCount < onlineGifUrls.length) {
+                imgElement.src = onlineGifUrls[gifTryCount];
+                gifTryCount++;
+            } else {
+                // 所有在线链接都失败，显示 CSS 动画
+                imgElement.style.display = 'none';
+                const loppyDiv = document.querySelector('.loppy');
+                if (loppyDiv) {
+                    loppyDiv.style.display = 'block';
+                }
+            }
+        };
+
+        // 夸赞寻沫的话 - 更多样化
         const praises = [
-            '寻沫最棒！✨',
-            '寻沫超可爱！💕',
-            '寻沫最美丽！🌸',
-            '寻沫最聪明！🌟',
-            '寻沫最温柔！💖',
-            '寻沫最优秀！⭐',
-            '寻沫最完美！🎀',
-            '寻沫最迷人！💝',
-            '寻沫最特别！🌈',
-            '寻沫最闪耀！✨',
-            '寻沫最棒棒！🎉',
-            '寻沫最厉害！🏆',
-            '寻沫最美好！💐',
-            '寻沫最珍贵！💎',
-            '寻沫最可爱！🐰',
-            '寻沫最甜心！🍭',
-            '寻沫最天使！👼',
-            '寻沫最完美！💫',
-            '寻沫最无敌！🦄',
-            '寻沫最闪耀！⭐'
+            '寻沫最棒！✨', '寻沫超可爱！💕', '寻沫最美丽！🌸',
+            '寻沫最聪明！🌟', '寻沫最温柔！💖', '寻沫最优秀！⭐',
+            '寻沫最完美！🎀', '寻沫最迷人！💝', '寻沫最特别！🌈',
+            '寻沫最闪耀！✨', '寻沫最棒棒！🎉', '寻沫最厉害！🏆',
+            '寻沫最美好！💐', '寻沫最珍贵！💎', '寻沫最可爱！🐰',
+            '寻沫最甜心！🍭', '寻沫最天使！👼', '寻沫最完美！💫',
+            '寻沫最无敌！🦄', '寻沫最闪耀！⭐', '寻沫最迷人！💖',
+            '寻沫最甜美！🍬', '寻沫最优雅！🦢', '寻沫最动人！💗',
+            '寻沫最闪亮！💫', '寻沫最出色！🎯', '寻沫最精彩！🎊',
+            '寻沫最非凡！🌟', '寻沫最独特！🎨', '寻沫最完美！💎'
         ];
 
-        // 创建飘落的文字
+        // 文字显示形式数组
+        const textStyles = ['float-up', 'rotating-text', 'bouncing-text', 'wave-text', 'twinkling-text'];
+
+        // 创建多样化的飘落文字
         function createFloatingText() {
             const text = praises[Math.floor(Math.random() * praises.length)];
+            const style = textStyles[Math.floor(Math.random() * textStyles.length)];
+            
             const floatingText = document.createElement('div');
-            floatingText.className = 'floating-text';
+            floatingText.className = 'floating-text ' + style;
             floatingText.textContent = text;
             floatingText.style.left = Math.random() * 100 + '%';
-            floatingText.style.animationDuration = (10 + Math.random() * 10) + 's';
-            floatingText.style.fontSize = (20 + Math.random() * 15) + 'px';
-            floatingText.style.animationDelay = Math.random() * 2 + 's';
+            floatingText.style.fontSize = (24 + Math.random() * 16) + 'px';
+            
+            // 随机颜色变化
+            const colors = [
+                'rgba(255, 255, 255, 0.95)',
+                'rgba(255, 182, 193, 0.95)',
+                'rgba(255, 192, 203, 0.95)',
+                'rgba(255, 105, 180, 0.95)',
+                'rgba(255, 20, 147, 0.95)'
+            ];
+            floatingText.style.color = colors[Math.floor(Math.random() * colors.length)];
             
             document.getElementById('text-container').appendChild(floatingText);
             
-            // 15秒后移除元素
+            // 25秒后移除元素
             setTimeout(() => {
-                floatingText.remove();
-            }, 20000);
+                if (floatingText.parentNode) {
+                    floatingText.remove();
+                }
+            }, 25000);
         }
 
         // 创建星星装饰
@@ -245,51 +441,85 @@
             star.textContent = '✨';
             star.style.left = Math.random() * 100 + '%';
             star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 2 + 's';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.fontSize = (18 + Math.random() * 12) + 'px';
             document.getElementById('stars-container').appendChild(star);
         }
 
         // 创建爱心装饰
         function createHeart() {
+            const hearts = ['💖', '💕', '💗', '💝', '💓', '💞'];
             const heart = document.createElement('div');
             heart.className = 'heart';
-            heart.textContent = '💖';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
             heart.style.left = Math.random() * 100 + '%';
             heart.style.bottom = '0';
             heart.style.animationDelay = Math.random() * 2 + 's';
+            heart.style.fontSize = (28 + Math.random() * 20) + 'px';
             document.getElementById('hearts-container').appendChild(heart);
             
             setTimeout(() => {
-                heart.remove();
-            }, 10000);
+                if (heart.parentNode) {
+                    heart.remove();
+                }
+            }, 12000);
         }
+
+        // 音乐控制
+        const musicControl = document.getElementById('musicControl');
+        const bgMusic = document.getElementById('bgMusic');
+        let isPlaying = false;
+
+        // 尝试播放音乐（需要用户交互）
+        musicControl.addEventListener('click', function() {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicControl.textContent = '🔇';
+                musicControl.classList.add('muted');
+                isPlaying = false;
+            } else {
+                bgMusic.play().then(() => {
+                    musicControl.textContent = '🎵';
+                    musicControl.classList.remove('muted');
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log('音乐播放失败，可能需要用户交互或使用本地音乐文件');
+                    musicControl.textContent = '🔇';
+                    musicControl.title = '音乐加载失败，请使用本地音乐文件';
+                });
+            }
+        });
 
         // 初始化：创建多个飘落文字
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 25; i++) {
             setTimeout(() => {
                 createFloatingText();
-            }, i * 500);
+            }, i * 400);
         }
 
-        // 持续创建新的飘落文字
-        setInterval(createFloatingText, 800);
+        // 持续创建新的飘落文字（多种形式）
+        setInterval(createFloatingText, 600);
 
         // 创建星星
-        for (let i = 0; i < 30; i++) {
-            setTimeout(createStar, i * 200);
+        for (let i = 0; i < 40; i++) {
+            setTimeout(createStar, i * 150);
         }
 
         // 持续创建爱心
-        setInterval(createHeart, 1000);
+        setInterval(createHeart, 800);
 
         // 处理 GIF 加载失败的情况
         const loppyGif = document.querySelector('.loppy-gif');
         const loppyDiv = document.querySelector('.loppy');
         
-        loppyGif.addEventListener('error', function() {
-            this.style.display = 'none';
-            loppyDiv.style.display = 'block';
-        });
+        if (loppyGif) {
+            loppyGif.addEventListener('error', function() {
+                window.tryOnlineGif(this);
+            });
+        }
+
+        // 页面加载提示
+        console.log('✨ 寻沫最棒！网页已加载完成！');
     </script>
 </body>
 </html>
